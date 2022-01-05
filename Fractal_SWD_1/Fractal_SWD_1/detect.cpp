@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <chrono>
+#include <iomanip> 
 
 void displayImage(cv::Mat& image) {
 	cv::namedWindow("Gray Image", cv::WINDOW_AUTOSIZE);
@@ -107,7 +108,8 @@ int main() {
 	fileName += "txt";
 	std::ofstream output;
 	output.open(fileName);
-	std::cout << xmin << " " << xmax << '\n' << ymin << " " << ymax;
-	output << xmin << " " << xmax << '\n' << ymin << " " << ymax;
+	std::cout.precision(5);
+	std::cout << std::fixed << xmin << " "  << ymin << " " << xmax << " " << ymax;
+	output << std::setprecision(5) << std::fixed << xmin << " " << ymin << " " << xmax << " " << ymax;;
 	return 0;
 }
