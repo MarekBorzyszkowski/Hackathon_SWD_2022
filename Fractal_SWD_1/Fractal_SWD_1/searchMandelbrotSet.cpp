@@ -40,7 +40,6 @@
 //}
 //
 //int main() {
-//	std::cout << "XD fraktal";
 //	std::string fileName;
 //	//std::cin >> fileName;
 //	fileName = "pic/przyk³ad_fraktale_1";
