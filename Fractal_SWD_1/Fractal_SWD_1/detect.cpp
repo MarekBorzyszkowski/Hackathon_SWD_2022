@@ -34,7 +34,6 @@ int main() {
 	std::chrono::duration<double> elapsed_seconds;
 	cv::Mat srcImage, scaledImage, result;
 	srcImage = cv::imread(fileName, cv::IMREAD_GRAYSCALE);
-	std::vector<cv::Mat> completeMSet;
 	cv::Mat mandelbrot;
 	int n=1, nextPowOf2 = 1, exponent = 0;
 	double xmin, xmax, ymin, ymax, theNeaestPointValue =0;
@@ -46,26 +45,15 @@ int main() {
 	dx = 2.0 / 400.0;
 	dy = 2.0 / 400.0;
 	mandelbrot = cv::imread("pic/mandelbrotSet" + std::to_string(1) + ".bmp", cv::IMREAD_GRAYSCALE);
-	//completeMSet.push_back(mandelbrot);
-	//displayImage(srcImage);
-	//displayImage(completeMSet[0]);
-
-
-	//mandelbrot = cv::imread("pic/mandelbrotSet" + std::to_string((int)pow(2, i)) + ".bmp", cv::IMREAD_GRAYSCALE);
-	//completeMSet.push_back(mandelbrot);
 	fileName.erase(fileName.end() - 3, fileName.end());
 	while(theNeaestPointValue < 0.9 && n<128){
-		//scale = scaleFactor * (double)n / (double)nextPowOf2;
-		//cv::resize(srcImage, scaledImage, cv::Size(400.0*scale, 400.0 * scale));
 		int result_cols = mandelbrot.cols - srcImage.cols + 1;
 		int result_rows = mandelbrot.rows - srcImage.rows + 1;
 		result.create(result_rows, result_cols, CV_32FC1);
 		cv::matchTemplate(mandelbrot, srcImage, result, cv::TM_CCOEFF_NORMED);
 		cv::minMaxLoc(result,  nullptr, &globalMax,  nullptr, &lowPoint, cv::Mat());
 		result = result * 255.0;
-		//cv::imwrite(fileName + "_outResult" + std::to_string(n) + ".png", result);
-		//display2Image(srcImage,result);
-
+		
 		if (theNeaestPointValue < globalMax) {
 
 			maxLowPoint =searchPoint + lowPoint;
@@ -78,8 +66,12 @@ int main() {
 		if (nextPowOf2 == n && n<64) {
 			nextPowOf2 *= 2;
 			exponent++;
-			mandelbrot = cv::imread("pic/mandelbrotSet" + std::to_string(nextPowOf2) + ".bmp", cv::IMREAD_GRAYSCALE);
-			//completeMSet.push_back(mandelbrot);
+			if (nextPowOf2 > 16) {
+				mandelbrot = cv::imread("pic/mandelbrotSet" + std::to_string(nextPowOf2) + ".png", cv::IMREAD_GRAYSCALE);
+			}
+			else {
+				mandelbrot = cv::imread("pic/mandelbrotSet" + std::to_string(nextPowOf2) + ".bmp", cv::IMREAD_GRAYSCALE);
+			}
 			if (n > 3) {
 				searchPoint.x = maxLowPoint.x - 400.0*4.0*0.15;
 				searchPoint.y = maxLowPoint.y - 400.0 * 4.0 *0.15;
@@ -112,7 +104,6 @@ int main() {
 		elapsed_seconds = end - start;
 		std::cout << elapsed_seconds.count() << " " << theNeaestPointValue << " " << xmin << " " << ymin<< '\n';
 	}
-	fileName.erase(fileName.end() - 3, fileName.end());
 	fileName += "txt";
 	std::ofstream output;
 	output.open(fileName);
